@@ -4,6 +4,7 @@ let isValid = require("./auth_users.js").isValid;
 let authenticatedUser = require("./auth_users.js").authenticatedUser;
 let users = require("./auth_users.js").users;
 const public_users = express.Router();
+const axios = require('axios')
 
 
 public_users.post("/register", (req,res) => {
@@ -25,6 +26,12 @@ public_users.post("/register", (req,res) => {
 public_users.get('/',function (req, res) {
   return res.send(JSON.stringify(books,null,5));
 });
+const connectToURL = async(url)=>{
+    const outcome = axios.get(url);
+    let listofbooks = (await outcome).data;
+    console.log(JSON.stringify(listofbooks));
+}
+//connectToURL('https://swatihim-5000.theiadocker-1-labs-prod-theiak8s-4-tor01.proxy.cognitiveclass.ai/');
 
 // Get book details based on ISBN
 public_users.get('/isbn/:isbn',function (req, res) {
@@ -39,7 +46,23 @@ public_users.get('/isbn/:isbn',function (req, res) {
     res.send("Book doesnt exists")
       
  });
+ const connecttoisbnNurl = (url)=>{
+    const req = axios.get(url);
+    console.log(req);
+    req.then(resp => {
+        let isbnbook = resp.data;
+        
+      })
+    .catch(err => {
+        console.log(err.toString())
+    });
+  }
+  //console.log("Before connect URL")
+  connecttoisbnNurl('https://swatihim-5000.theiadocker-1-labs-prod-theiak8s-4-tor01.proxy.cognitiveclass.ai/isbn/A123');
+  //console.log("After connect URL")
   
+  
+
 // Get book details based on author
 public_users.get('/author/:author',function (req, res) {
     const author = req.params.author;
@@ -53,6 +76,13 @@ public_users.get('/author/:author',function (req, res) {
     res.send("Book doesnt exists")
       
 });
+const connectToauthorURL = async(url)=>{   
+    const outcome = axios.get(url);  
+     let booksbyAuthor = (await outcome).data;
+       console.log(JSON.stringify(booksbyAuthor));
+   }
+  // connectToauthorURL('https://swatihim-5000.theiadocker-1-labs-prod-theiak8s-4-tor01.proxy.cognitiveclass.ai/author/Chinua Achebe);
+   
 
 // Get all books based on title
 public_users.get('/title/:title',function (req, res) {
@@ -67,6 +97,12 @@ public_users.get('/title/:title',function (req, res) {
   else
   res.send("Book doesnt exists")
 });
+const connectTotitleURL = async(url)=>{    const outcome = axios.get(url);  
+    let booksbytitle = (await outcome).data;
+      console.log(JSON.stringify(booksbytitle));
+  }
+  //connectTotitleURL('https://swatihim-5000.theiadocker-1-labs-prod-theiak8s-4-tor01.proxy.cognitiveclass.ai/author/Chinua Achebe);
+  
 
 //  Get book review
 public_users.get('/review/:isbn',function (req, res) {
